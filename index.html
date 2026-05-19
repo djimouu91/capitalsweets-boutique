@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>CapitalSweets — Authentic Algerian Pastries</title>
+  <meta name="description" content="Handcrafted Algerian sweets & pastries. Makroud, Baklava, Chrik & more. Fresh-made, delivered across Canada."/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Jost:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="style.css"/>
+  <link rel="stylesheet" href="ux-improvements.css"/>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg"/>
+  <script src="https://js.stripe.com/v3/" defer></script>
+  <script src="https://www.paypal.com/sdk/js?client-id=YOUR_PAYPAL_CLIENT_ID&currency=CAD&components=buttons" id="paypal-sdk" defer></script>
+</head>
+<body>
+
+<!-- ══════════════════ TOAST ══════════════════ -->
+<div id="toast" class="toast"></div>
+
+<!-- ══════════════════ HEADER ══════════════════ -->
+<header id="site-header">
+  <!-- Level 1: utility bar -->
+  <div class="header-top">
+    <span>Free delivery on orders over CA$65 &nbsp;·&nbsp; Made fresh to order</span>
+    <div class="header-top-icons">
+      <a href="#contact" title="Contact">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+      </a>
+      <a href="#about" title="About">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+      </a>
+      <button class="cart-trigger" onclick="toggleCart()" title="Bag">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+        <span id="cartBadge" class="cart-badge" style="display:none">0</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Level 2: logo -->
+  <div class="header-brand">
+    <a href="#" class="brand-logo">
+      <img src="logo.svg" alt="CapitalSweets" class="header-logo-img"/>
+    </a>
+  </div>
+
+  <!-- Level 3: nav -->
+  <nav class="header-nav">
+    <ul>
+      <li class="has-dropdown">
+        <a href="#shop">Pastries</a>
+        <ul class="dropdown">
+          <li><a href="#shop" onclick="filterAndScroll('cookies')">Cookies & Biscuits</a></li>
+          <li><a href="#shop" onclick="filterAndScroll('baklava')">Baklava & Layered</a></li>
+          <li><a href="#shop" onclick="filterAndScroll('cakes')">Cakes & Slices</a></li>
+          <li><a href="#shop" onclick="filterAndScroll('fried')">Fried & Honey</a></li>
+          <li><a href="#shop" onclick="filterAndScroll('all')">All Sweets</a></li>
+        </ul>
+      </li>
+      <li class="has-dropdown">
+        <a href="#shop">Gift Boxes</a>
+        <ul class="dropdown">
+          <li><a href="#shop" onclick="filterAndScroll('gift')">Signature Boxes</a></li>
+          <li><a href="#shop" onclick="filterAndScroll('all')">Browse All</a></li>
+        </ul>
+      </li>
+      <li><a href="#story">Our Story</a></li>
+      <li><a href="#seasonal">Seasonal</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+    <button class="nav-cart-btn" onclick="toggleCart()">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+      Bag (<span id="cartBadge2">0</span>)
+    </button>
+  </nav>
+</header>
+
+<!-- ══════════════════ TICKER ══════════════════ -->
+<div class="ticker-bar">
+  <div class="ticker-track">
+    <span>✦ Handcrafted with love &nbsp;&nbsp;</span>
+    <span>✦ Fresh-baked to order &nbsp;&nbsp;</span>
+    <span>✦ Free shipping over CA$65 &nbsp;&nbsp;</span>
+    <span>✦ Algerian family recipes &nbsp;&nbsp;</span>
+    <span>✦ Gift wrapping available &nbsp;&nbsp;</span>
+    <span>✦ Eid &amp; celebration boxes &nbsp;&nbsp;</span>
+    <span>✦ Ships across Canada &nbsp;&nbsp;</span>
+    <span>✦ Handcrafted with love &nbsp;&nbsp;</span>
+    <span>✦ Fresh-baked to order &nbsp;&nbsp;</span>
+    <span>✦ Free shipping over CA$65 &nbsp;&nbsp;</span>
+    <span>✦ Algerian family recipes &nbsp;&nbsp;</span>
+    <span>✦ Gift wrapping available &nbsp;&nbsp;</span>
+    <span>✦ Eid &amp; celebration boxes &nbsp;&nbsp;</span>
+    <span>✦ Ships across Canada &nbsp;&nbsp;</span>
+  </div>
+</div>
+
+<!-- ══════════════════ HERO ══════════════════ -->
+<section class="hero">
+  <div class="hero-img-wrap">
+    <img src="https://images.unsplash.com/photo-1571115764595-644a1f56a55c?w=1600&q=85" alt="Algerian pastries" class="hero-bg"/>
+    <div class="hero-overlay"></div>
+  </div>
+  <div class="hero-content">
+    <p class="hero-eyebrow">Ottawa · Canada · Since 2020</p>
+    <h1 class="hero-title">The Sweetness<br/><em>of Algeria,</em><br/>at Your Table</h1>
+    <p class="hero-sub">Handcrafted pastries from century-old family recipes — made fresh, delivered with care.</p>
+    <div class="hero-ctas">
+      <a href="#shop" class="btn-primary">Shop Pastries</a>
+      <a href="#gift" class="btn-outline">Gift Boxes</a>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════ TRUST BAR ══════════════════ -->
+<section class="trust-bar">
+  <div class="trust-item">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+    <span>100% Halal</span>
+  </div>
+  <div class="trust-item">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+    <span>Made to Order</span>
+  </div>
+  <div class="trust-item">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+    <span>Ships Canada-Wide</span>
+  </div>
+  <div class="trust-item">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+    <span>Family Recipes</span>
+  </div>
+</section>
+
+<!-- ══════════════════ CATEGORIES ══════════════════ -->
+<section class="categories-section" id="categories">
+  <div class="section-header">
+    <h2>Explore Our Collections</h2>
+    <p>From festive gift boxes to everyday treats — all made with love</p>
+  </div>
+  <div class="cat-grid">
+    <div class="cat-card" onclick="filterAndScroll('cookies')">
+      <div class="cat-img-wrap">
+        <img src="https://images.unsplash.com/photo-1558961363-fa8fdf82db35?w=800&q=80" alt="Cookies"/>
+      </div>
+      <div class="cat-label">
+        <span>Cookies & Biscuits</span>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+      </div>
+    </div>
+    <div class="cat-card large" onclick="filterAndScroll('baklava')">
+      <div class="cat-img-wrap">
+        <img src="https://images.unsplash.com/photo-1519676867240-f03562e64548?w=800&q=80" alt="Baklava"/>
+      </div>
+      <div class="cat-label">
+        <span>Baklava & Layered</span>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+      </div>
+    </div>
+    <div class="cat-card" onclick="filterAndScroll('gift')">
+      <div class="cat-img-wrap">
+        <img src="https://images.unsplash.com/photo-1607920592519-7b2d615d8c3e?w=800&q=80" alt="Gift Box"/>
+      </div>
+      <div class="cat-label">
+        <span>Gift Boxes</span>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════ SHOP ══════════════════ -->
+<section class="shop-section" id="shop">
+  <div class="section-header">
+    <h2>Our Sweets</h2>
+    <p>Each piece is handcrafted using grandmother's recipes, premium nuts, and pure honey</p>
+  </div>
+  <div class="filter-tabs">
+    <button class="ftab active" data-cat="all" onclick="filterProducts('all',event,this)">All</button>
+    <button class="ftab" data-cat="cookies" onclick="filterProducts('cookies',event,this)">Cookies</button>
+    <button class="ftab" data-cat="baklava" onclick="filterProducts('baklava',event,this)">Baklava</button>
+    <button class="ftab" data-cat="cakes" onclick="filterProducts('cakes',event,this)">Cakes</button>
+    <button class="ftab" data-cat="fried" onclick="filterProducts('fried',event,this)">Fried & Honey</button>
+    <button class="ftab" data-cat="gift" onclick="filterProducts('gift',event,this)">Gift Boxes</button>
+  </div>
+  <div class="products-grid" id="productsGrid"></div>
+</section>
+
+<!-- ══════════════════ EDITORIAL ══════════════════ -->
+<section class="editorial-section" id="story">
+  <div class="ed-image">
+    <img src="https://images.unsplash.com/photo-1590080875515-8a3a8dc5735e?w=900&q=85" alt="Pastry making"/>
+  </div>
+  <div class="ed-content">
+    <p class="ed-eyebrow">Our Story</p>
+    <h2 class="ed-title"><em>A grandmother's kitchen,</em><br/>now at your doorstep</h2>
+    <p class="ed-body">CapitalSweets was born from a simple love — the smell of orange blossom and honey filling a Algerian home. Every recipe has been passed down through generations, made with the same care, the same ingredients, the same patience.</p>
+    <p class="ed-body">Based in Ottawa, we bring authentic Algerian flavours to Canadian tables. Every piece is made fresh when you order — no preservatives, no shortcuts, just tradition.</p>
+    <a href="#shop" class="btn-primary">Explore Our Sweets</a>
+  </div>
+</section>
+
+<!-- ══════════════════ SEASONAL BANNER ══════════════════ -->
+<section class="seasonal-banner" id="seasonal">
+  <div class="seasonal-content">
+    <p class="seasonal-eyebrow">Limited Edition</p>
+    <h2>Eid & Celebration Boxes</h2>
+    <p>Beautiful gift boxes filled with our finest pastries — perfect for Eid, weddings, and special occasions. Custom orders welcome.</p>
+    <a href="#shop" onclick="filterAndScroll('gift')" class="btn-gold">Order Gift Boxes</a>
+  </div>
+</section>
+
+<!-- ══════════════════ HOW IT WORKS ══════════════════ -->
+<section class="how-section">
+  <div class="section-header">
+    <h2>Fresh Made, Just for You</h2>
+  </div>
+  <div class="how-grid">
+    <div class="how-step">
+      <div class="how-num">01</div>
+      <h3>You Order</h3>
+      <p>Select your pastries and place your order online — we accept card, PayPal, and Interac.</p>
+    </div>
+    <div class="how-step">
+      <div class="how-num">02</div>
+      <h3>We Bake Fresh</h3>
+      <p>Your sweets are handcrafted to order using only premium ingredients and traditional methods.</p>
+    </div>
+    <div class="how-step">
+      <div class="how-num">03</div>
+      <h3>Delivered with Love</h3>
+      <p>Carefully packaged in our signature boxes and shipped to your door across Canada.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════ TESTIMONIALS ══════════════════ -->
+<section class="reviews-section">
+  <div class="section-header">
+    <h2>What Our Customers Say</h2>
+  </div>
+  <div class="reviews-grid">
+    <div class="review-card">
+      <div class="stars">★★★★★</div>
+      <p class="review-text">"These Makroud are exactly like my mother used to make in Oran. I cried a little — in the best way. Will order every month."</p>
+      <p class="review-author">— Yasmine B., Montreal</p>
+    </div>
+    <div class="review-card">
+      <div class="stars">★★★★★</div>
+      <p class="review-text">"I ordered the Eid gift box for my non-Algerian in-laws. They were blown away. The baklava disappeared in minutes."</p>
+      <p class="review-author">— Sarah K., Toronto</p>
+    </div>
+    <div class="review-card">
+      <div class="stars">★★★★★</div>
+      <p class="review-text">"Best Algerian sweets I've found in Canada. Fresh, authentic, beautifully packaged. Ghribia aux amandes — absolutely perfection."</p>
+      <p class="review-author">— Karim A., Ottawa</p>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════ NEWSLETTER ══════════════════ -->
+<section class="newsletter-section">
+  <div class="newsletter-inner">
+    <h2>Join the CapitalSweets Circle</h2>
+    <p>Be first to know about seasonal specials, Eid boxes, and exclusive offers.</p>
+    <form class="newsletter-form" onsubmit="subscribeNewsletter(event)">
+      <input type="email" placeholder="your@email.com" required/>
+      <button type="submit">Subscribe</button>
+    </form>
+  </div>
+</section>
+
+<!-- ══════════════════ CONTACT ══════════════════ -->
+<section class="contact-section" id="contact">
+  <div class="contact-text">
+    <p class="ed-eyebrow">Get in Touch</p>
+    <h2>Custom Orders & Questions</h2>
+    <p>Planning a wedding, Eid, or a large event? We love custom orders. Reach out and we'll create something special together.</p>
+    <div class="contact-details">
+      <p>📍 Ottawa, Ontario, Canada</p>
+      <p>📧 hello@capitalsweets.ca</p>
+      <p>📞 +1 (613) 000-0000</p>
+      <p>💬 WhatsApp available</p>
+    </div>
+  </div>
+  <form class="contact-form" onsubmit="submitContact(event)">
+    <input type="text" placeholder="Your name" required/>
+    <input type="email" placeholder="Email address" required/>
+    <input type="text" placeholder="Subject (e.g. Eid box, wedding order)"/>
+    <textarea placeholder="Tell us about your order…" rows="5" required></textarea>
+    <button type="submit" class="btn-primary">Send Message</button>
+  </form>
+</section>
+
+<!-- ══════════════════ FOOTER ══════════════════ -->
+<footer class="site-footer">
+  <div class="footer-grid">
+    <div class="footer-col brand-col">
+      <p class="footer-brand">CapitalSweets</p>
+      <p>Authentic Algerian pastries, handcrafted with love in Ottawa, Canada.</p>
+      <div class="footer-payment">
+        <span>Visa</span><span>Mastercard</span><span>PayPal</span><span>Interac</span>
+      </div>
+    </div>
+    <div class="footer-col">
+      <h4>Pastries</h4>
+      <ul>
+        <li><a href="#shop" onclick="filterAndScroll('cookies')">Cookies & Biscuits</a></li>
+        <li><a href="#shop" onclick="filterAndScroll('baklava')">Baklava</a></li>
+        <li><a href="#shop" onclick="filterAndScroll('cakes')">Cakes & Slices</a></li>
+        <li><a href="#shop" onclick="filterAndScroll('fried')">Fried & Honey</a></li>
+        <li><a href="#shop" onclick="filterAndScroll('gift')">Gift Boxes</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Info</h4>
+      <ul>
+        <li><a href="#story">Our Story</a></li>
+        <li><a href="#contact">Contact</a></li>
+        <li><a href="#">Shipping Policy</a></li>
+        <li><a href="#">Returns</a></li>
+        <li><a href="#">FAQ</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Follow Us</h4>
+      <ul>
+        <li><a href="#">Instagram</a></li>
+        <li><a href="#">TikTok</a></li>
+        <li><a href="#">Facebook</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>© 2026 CapitalSweets · Ottawa, Canada · All rights reserved</p>
+  </div>
+</footer>
+
+<!-- ══════════════════ CART DRAWER ══════════════════ -->
+<div id="drawerOverlay" class="drawer-overlay" onclick="toggleCart()"></div>
+<div id="cartDrawer" class="cart-drawer">
+  <div class="cart-header">
+    <h3>Your Bag (<span id="cartItemCount">0</span>)</h3>
+    <button onclick="toggleCart()" class="cart-close">✕</button>
+  </div>
+  <div id="cartItems" class="cart-items"></div>
+  <div id="cartFooter" class="cart-footer" style="display:none">
+    <div class="cart-total-row">
+      <span>Subtotal</span>
+      <span>CA$<span id="cartTotal">0.00</span></span>
+    </div>
+    <p class="cart-shipping-note" id="cartShippingNote"></p>
+    <button class="btn-primary btn-full" onclick="openCheckout()">Checkout</button>
+  </div>
+</div>
+
+<!-- ══════════════════ CHECKOUT MODAL ══════════════════ -->
+<div id="checkoutOverlay" class="co-overlay" onclick="closeCheckout(event)">
+  <div class="co-modal">
+
+    <!-- STEP 1: Shipping -->
+    <div id="co-step1" class="co-step">
+      <div class="co-left">
+        <button class="co-close" onclick="document.getElementById('checkoutOverlay').classList.remove('open');document.body.style.overflow=''">✕</button>
+        <div class="co-brand">CapitalSweets</div>
+        <div class="co-sum-wrap">
+          <h4>Order Summary</h4>
+          <div id="coSummary" class="co-summary-items"></div>
+          <div id="coTotal" class="co-total-block"></div>
+        </div>
+      </div>
+      <div class="co-right">
+        <h3 class="co-title">Shipping Information</h3>
+        <form id="co-form1" onsubmit="goStep2(event)" class="co-form">
+          <div class="co-row2">
+            <div class="co-field"><label>First Name</label><input id="fn" type="text" required placeholder="Amina"/></div>
+            <div class="co-field"><label>Last Name</label><input id="ln" type="text" required placeholder="Benali"/></div>
+          </div>
+          <div class="co-field"><label>Email</label><input id="em" type="email" required placeholder="amina@email.com"/></div>
+          <div class="co-field"><label>Phone</label><input id="ph" type="tel" placeholder="+1 613 000 0000"/></div>
+          <div class="co-field"><label>Address</label><input id="addr" type="text" required placeholder="123 Main St"/></div>
+          <div class="co-row2">
+            <div class="co-field"><label>City</label><input id="city" type="text" required placeholder="Ottawa"/></div>
+            <div class="co-field"><label>Postal Code</label><input id="zip" type="text" required placeholder="K1A 0A1"/></div>
+          </div>
+          <div class="co-field">
+            <label>Province</label>
+            <select id="country">
+              <option value="ON">Ontario</option>
+              <option value="QC">Quebec</option>
+              <option value="BC">British Columbia</option>
+              <option value="AB">Alberta</option>
+              <option value="MB">Manitoba</option>
+              <option value="SK">Saskatchewan</option>
+              <option value="NS">Nova Scotia</option>
+              <option value="NB">New Brunswick</option>
+            </select>
+          </div>
+          <div class="co-field">
+            <label>Gift Message (optional)</label>
+            <textarea id="giftMsg" placeholder="Add a personal note for gift orders…" rows="2" style="resize:vertical"></textarea>
+          </div>
+          <button type="submit" class="btn-primary btn-full">Continue to Payment →</button>
+        </form>
+      </div>
+    </div>
+
+    <!-- STEP 2: Payment -->
+    <div id="co-step2" class="co-step hidden">
+      <div class="co-left">
+        <button class="co-close" onclick="document.getElementById('checkoutOverlay').classList.remove('open');document.body.style.overflow=''">✕</button>
+        <div class="co-brand">CapitalSweets</div>
+        <div class="co-sum-wrap">
+          <h4>Order Summary</h4>
+          <div id="coSummary2" class="co-summary-items"></div>
+          <div id="coTotal2" class="co-total-block"></div>
+        </div>
+        <button class="co-back-btn" onclick="showStep(1)">← Back</button>
+      </div>
+      <div class="co-right">
+        <h3 class="co-title">Payment</h3>
+
+        <!-- Payment method tabs -->
+        <div class="pm-tabs">
+          <button class="pm-tab active" onclick="switchPM('card',this)">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+            Card
+          </button>
+          <button class="pm-tab" onclick="switchPM('paypal',this)">PayPal</button>
+          <button class="pm-tab" onclick="switchPM('interac',this)">Interac</button>
+        </div>
+
+        <!-- Card panel -->
+        <div id="pm-card">
+          <div id="stripe-card-mount" style="border:1px solid #ddd0b8;border-radius:8px;padding:14px;margin-bottom:16px;background:#fff;min-height:44px;"></div>
+          <!-- Demo fields (shown when Stripe not configured) -->
+          <div id="demo-card-fields">
+            <div class="co-field">
+              <label>Name on Card</label>
+              <input id="cName" type="text" placeholder="Amina Benali"/>
+            </div>
+            <div class="co-field">
+              <label>Card Number</label>
+              <input type="text" placeholder="4242 4242 4242 4242" maxlength="19" oninput="fmtCard(this)"/>
+            </div>
+            <div class="co-row2">
+              <div class="co-field"><label>Expiry</label><input type="text" placeholder="MM / YY" maxlength="7" oninput="fmtExpiry(this)"/></div>
+              <div class="co-field"><label>CVV</label><input type="text" placeholder="123" maxlength="4"/></div>
+            </div>
+          </div>
+          <button class="btn-primary btn-full btn-co" onclick="processPayment()">
+            Pay CA$<span id="payAmount">0.00</span>
+          </button>
+          <p class="co-secure">🔒 Secured by Stripe · 256-bit SSL</p>
+        </div>
+
+        <!-- PayPal panel -->
+        <div id="pm-paypal" class="hidden">
+          <div id="paypal-button-container" style="margin-top:12px;"></div>
+          <p class="co-secure" style="margin-top:12px;">You will be redirected to PayPal to complete your payment securely.</p>
+        </div>
+
+        <!-- Interac panel -->
+        <div id="pm-interac" class="hidden">
+          <div style="background:#f9f5ee;border:1px solid #ddd0b8;border-radius:10px;padding:20px;text-align:center;margin:12px 0;">
+            <p style="font-weight:600;color:#5c3d1e;margin-bottom:8px;">Pay with Interac e-Transfer</p>
+            <p style="font-size:.88rem;color:#8a7060;line-height:1.6;">Send your payment to <strong>hello@capitalsweets.ca</strong><br/>
+            Include your order number in the message.<br/>
+            Orders are processed after payment confirmation.</p>
+          </div>
+          <button class="btn-primary btn-full" onclick="processInterac()">Confirm Interac Order</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- STEP 3: Success -->
+    <div id="co-step3" class="co-step hidden">
+      <div class="co-success">
+        <div class="co-success-icon">✦</div>
+        <h2>Order Confirmed!</h2>
+        <p>Thank you for your order. A confirmation has been sent to<br/><strong id="successEmail"></strong></p>
+        <p class="co-ref">Order reference: <strong id="successRef"></strong></p>
+        <p style="font-size:.85rem;color:#8a7060;margin-top:8px;">We'll start baking your pastries fresh and notify you when they ship.</p>
+        <button class="btn-primary" style="margin-top:24px" onclick="document.getElementById('checkoutOverlay').classList.remove('open');document.body.style.overflow='';resetCart()">Continue Shopping</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script src="app.js"></script>
+<script src="checkout.js"></script>
+<script src="mobile-nav.js"></script>
+</body>
+</html>

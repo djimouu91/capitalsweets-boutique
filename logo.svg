@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 120" width="360" height="120">
+  <defs>
+    <style>
+      .brand { font-family: 'Cormorant Garamond', Georgia, serif; }
+      .sub   { font-family: 'Jost', 'Helvetica Neue', sans-serif; }
+    </style>
+  </defs>
+
+  <!-- Crescent moon (Algerian symbol) -->
+  <g transform="translate(32, 60)">
+    <!-- Outer circle -->
+    <circle cx="0" cy="0" r="26" fill="none" stroke="#c8922a" stroke-width="1.5"/>
+    <!-- Inner crescent mask -->
+    <circle cx="9" cy="-7" r="20" fill="#fdf7ed"/>
+    <!-- Small star inside crescent -->
+    <polygon points="0,8 2,14 8,14 3,18 5,24 0,20 -5,24 -3,18 -8,14 -2,14"
+             fill="#c8922a" transform="scale(0.55) translate(0,-4)"/>
+    <!-- Honey drip accent at bottom -->
+    <ellipse cx="0" cy="26" rx="3" ry="5" fill="#c8922a" opacity="0.7"/>
+    <ellipse cx="0" cy="33" rx="1.5" ry="3" fill="#c8922a" opacity="0.4"/>
+  </g>
+
+  <!-- CAPITAL text small above -->
+  <text x="78" y="48"
+        class="sub"
+        font-size="9"
+        font-weight="500"
+        letter-spacing="5"
+        fill="#c8922a">CAPITAL</text>
+
+  <!-- SWEETS wordmark -->
+  <text x="75" y="82"
+        class="brand"
+        font-size="44"
+        font-weight="400"
+        letter-spacing="6"
+        fill="#3d1f08">Sweets</text>
+
+  <!-- Decorative horizontal line with diamond -->
+  <line x1="78" y1="92" x2="240" y2="92" stroke="#c8922a" stroke-width="0.8" opacity="0.5"/>
+  <polygon points="252,92 258,89 264,92 258,95" fill="#c8922a" opacity="0.6"/>
+  <line x1="266" y1="92" x2="330" y2="92" stroke="#c8922a" stroke-width="0.8" opacity="0.5"/>
+
+  <!-- Tagline -->
+  <text x="78" y="108"
+        class="sub"
+        font-size="8.5"
+        font-weight="300"
+        letter-spacing="3.5"
+        fill="#9a7a58">AUTHENTIC ALGERIAN PASTRIES · OTTAWA</text>
+</svg>

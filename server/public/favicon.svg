@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <!-- Background -->
+  <rect width="64" height="64" fill="#3d1f08"/>
+  <!-- Crescent -->
+  <circle cx="32" cy="32" r="22" fill="none" stroke="#c8922a" stroke-width="2"/>
+  <circle cx="40" cy="26" r="17" fill="#3d1f08"/>
+  <!-- Star -->
+  <polygon points="24,34 26,40 32,40 27,44 29,50 24,46 19,50 21,44 16,40 22,40"
+           fill="#c8922a" transform="scale(0.7) translate(14,6)"/>
+</svg>
