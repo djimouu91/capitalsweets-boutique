@@ -385,33 +385,31 @@
             <div class="co-field"><label>City</label><input id="city" type="text" required placeholder="Ottawa"/></div>
             <div class="co-field"><label id="zipLabel">Postal Code</label><input id="zip" type="text" required placeholder="K1A 0A1" maxlength="10" oninput="this.value=this.value.toUpperCase()"/></div>
           </div>
-          <div class="co-row2">
-            <div class="co-field">
-              <label>Country</label>
-              <select id="country" onchange="updateProvinceDropdown(this.value)">
-                <option value="CA">Canada 🇨🇦</option>
-                <option value="US">United States 🇺🇸</option>
-              </select>
-            </div>
-            <div class="co-field">
-              <label id="provinceLabel">Province / State</label>
-              <select id="province" required>
-                <option value="">Select...</option>
-                <option value="AB">Alberta</option>
-                <option value="BC">British Columbia</option>
-                <option value="MB">Manitoba</option>
-                <option value="NB">New Brunswick</option>
-                <option value="NL">Newfoundland</option>
-                <option value="NS">Nova Scotia</option>
-                <option value="NT">Northwest Territories</option>
-                <option value="NU">Nunavut</option>
-                <option value="ON">Ontario</option>
-                <option value="PE">Prince Edward Island</option>
-                <option value="QC">Québec</option>
-                <option value="SK">Saskatchewan</option>
-                <option value="YT">Yukon</option>
-              </select>
-            </div>
+          <div class="co-field">
+            <label>Country</label>
+            <select id="country" onchange="updateProvinceDropdown(this.value)">
+              <option value="CA">Canada 🇨🇦</option>
+              <option value="US">United States 🇺🇸</option>
+            </select>
+          </div>
+          <div class="co-field">
+            <label id="provinceLabel">Province / State</label>
+            <select id="province" required>
+              <option value="">Select province...</option>
+              <option value="AB">Alberta</option>
+              <option value="BC">British Columbia</option>
+              <option value="MB">Manitoba</option>
+              <option value="NB">New Brunswick</option>
+              <option value="NL">Newfoundland</option>
+              <option value="NS">Nova Scotia</option>
+              <option value="NT">Northwest Territories</option>
+              <option value="NU">Nunavut</option>
+              <option value="ON">Ontario</option>
+              <option value="PE">Prince Edward Island</option>
+              <option value="QC">Québec</option>
+              <option value="SK">Saskatchewan</option>
+              <option value="YT">Yukon</option>
+            </select>
           </div>
           <div class="co-field">
             <label>Gift Message (optional)</label>
