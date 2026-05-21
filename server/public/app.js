@@ -15,106 +15,122 @@ const FALLBACK_PRODUCTS = [
   {
     id: '1', category: 'cookies',
     name: 'Makroud el Asser',
-    desc: 'Classic semolina diamond cookies filled with Medjool dates & orange blossom water. Family recipe from Constantine.',
+    desc: 'Diamond semolina cookies filled with Medjool dates & orange blossom. Baked fresh in Ottawa. Family recipe from Constantine. Prix : 500g box.',
     price: 28, orig: null, badge: 'Best Seller',
     img: 'https://images.unsplash.com/photo-1558961363-fa8fdf82db35?w=600&q=80',
-    angle: 'The #1 Algerian cookie — "tastes exactly like my grandmother made them"'
+    angle: '#1 Algerian cookie — "tastes exactly like grandmother made them"'
   },
   {
     id: '2', category: 'cookies',
     name: 'Ghribia aux Amandes',
-    desc: 'Melt-in-your-mouth almond crescent shortbread, dusted with powdered sugar. Delicate and buttery.',
-    price: 24, orig: 32, badge: 'Sale',
+    desc: 'Melt-in-your-mouth almond shortbread dusted in icing sugar. Buttery, delicate, irresistible. 400g box.',
+    price: 24, orig: 30, badge: 'Sale',
     img: 'https://images.unsplash.com/photo-1499636136210-6f4ee915583e?w=600&q=80',
-    angle: '"Literally melts in your mouth" — top seller for Eid gifting'
+    angle: '"Melts in your mouth" — top Eid gifting cookie 2026'
   },
   {
     id: '3', category: 'cookies',
-    name: 'Chrik Dorés',
-    desc: 'Golden orange blossom shortbread rings, gently crispy, lightly sweet. Perfect with mint tea.',
+    name: 'Chrik Dorés à la Fleur d\'Oranger',
+    desc: 'Golden shortbread rings scented with orange blossom & vanilla. Lightly crispy, perfectly sweet. 400g box.',
     price: 22, orig: null, badge: 'New',
     img: 'https://images.unsplash.com/photo-1548369937-47519962c11a?w=600&q=80',
-    angle: 'Tea-time essential — pairs perfectly with Moroccan mint tea'
+    angle: 'Tea-time essential — pairs perfectly with mint tea'
   },
   {
     id: '4', category: 'cookies',
     name: 'Petits Fours aux Pistaches',
-    desc: 'Elegant pistachio financiers dipped in white chocolate. Sophisticated flavour, beautiful presentation.',
+    desc: 'Elegant pistachio financiers dipped in white chocolate. Presented in a beautiful gift-ready box. 300g.',
     price: 32, orig: null, badge: 'New',
-    img: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=600&q=80',
-    angle: 'Premium gift cookie — "I felt like I was in a Parisian patisserie"'
+    img: 'https://images.unsplash.com/photo-1618160702438-9b02ab6515c9?w=600&q=80',
+    angle: 'Premium gift cookie — "like a Parisian patisserie in Ottawa"'
   },
 
   // ── BAKLAVA & LAYERED ─────────────────────────────────────────────────────
   {
     id: '5', category: 'baklava',
-    name: 'Baklava Algérienne au Miel',
-    desc: 'Layers of crispy phyllo dough, filled with crushed walnuts & almonds, soaked in pure wildflower honey.',
+    name: 'Baklava Algérienne au Miel de Fleurs',
+    desc: 'Crispy phyllo layers filled with crushed walnuts & almonds, soaked in pure wildflower honey. Not too sweet — perfectly balanced. 400g.',
     price: 38, orig: 52, badge: 'Best Seller',
     img: 'https://images.unsplash.com/photo-1519676867240-f03562e64548?w=600&q=80',
-    angle: 'Authentic Algerian recipe — not too sweet, perfectly balanced'
+    angle: 'Authentic Algerian recipe — "the best baklava in Ottawa"'
   },
   {
     id: '6', category: 'baklava',
-    name: 'Cornes de Gazelle',
-    desc: 'Delicate crescent pastries filled with almond paste and orange blossom, lightly fried and honey-glazed.',
+    name: 'Cornes de Gazelle (Tcharek)',
+    desc: 'Crescent pastries filled with almond paste & orange blossom, lightly fried then honey-glazed. A North African icon. 350g.',
     price: 30, orig: null, badge: 'Best Seller',
     img: 'https://images.unsplash.com/photo-1571115764595-644a1f56a55c?w=600&q=80',
-    angle: 'North African icon — "looks like art, tastes even better"'
+    angle: '"Looks like art, tastes even better" — viral Algerian pastry'
   },
 
   // ── CAKES & SLICES ────────────────────────────────────────────────────────
   {
     id: '7', category: 'cakes',
-    name: 'Kalb el Louz',
-    desc: 'Signature Algerian almond semolina cake soaked in honey syrup, garnished with whole almonds. Moist and rich.',
+    name: 'Kalb el Louz (Cœur d\'Amandes)',
+    desc: 'The iconic Algerian almond semolina cake soaked in wildflower honey syrup, decorated with whole almonds. Celebration staple. 6–8 portions.',
     price: 42, orig: 58, badge: 'Best Seller',
     img: 'https://images.unsplash.com/photo-1586985289688-ca3cf47d3e6e?w=600&q=80',
     angle: '"Heart of almonds" — the iconic Algerian celebration cake'
   },
   {
     id: '8', category: 'cakes',
-    name: 'Sellou (Sfouf) Box',
-    desc: 'Traditional energy-rich mix of toasted flour, almonds, sesame seeds & honey. Festive Ramadan favourite.',
+    name: 'Sellou (Sfouf) Traditionnel',
+    desc: 'Energy-rich blend of toasted flour, ground almonds, sesame & honey spiced with cinnamon. Ramadan & new baby tradition. 500g box.',
     price: 26, orig: null, badge: 'New',
     img: 'https://images.unsplash.com/photo-1509440159596-0249088772ff?w=600&q=80',
-    angle: 'Ramadan & new mother tradition — "nostalgic taste of home"'
+    angle: 'Ramadan staple — "nostalgic taste of home" for Algerian diaspora'
   },
 
   // ── FRIED & HONEY ─────────────────────────────────────────────────────────
   {
     id: '9', category: 'fried',
     name: 'Zlabia de Constantine',
-    desc: 'Crispy golden spirals of fried batter soaked in honey syrup. Crunchy on the outside, syrupy inside.',
+    desc: 'Golden crispy spirals of fried batter soaked in honey syrup. Crunchy outside, syrupy inside. The Ramadan must-have. 400g.',
     price: 20, orig: 28, badge: 'Sale',
     img: 'https://images.unsplash.com/photo-1551024601-bec78aea704b?w=600&q=80',
-    angle: 'Ramadan staple — "these are dangerously addictive"'
+    angle: '"Dangerously addictive" — Ramadan staple, Ottawa exclusive'
   },
   {
     id: '10', category: 'fried',
     name: 'Griwech au Sésame & Miel',
-    desc: 'Flower-shaped fried pastry coated with honey and sprinkled with toasted sesame seeds. Crispy & fragrant.',
+    desc: 'Flower-shaped fried pastry rolled in honey and topped with golden toasted sesame. Crispy, fragrant, visually stunning. 350g.',
     price: 24, orig: null, badge: 'New',
     img: 'https://images.unsplash.com/photo-1558618047-3c8c76ca7d13?w=600&q=80',
-    angle: 'Visual showstopper — viral on Algerian TikTok, beautiful plating'
+    angle: 'Visual showstopper — viral TikTok Algerian pastry 2026'
   },
 
   // ── GIFT BOXES ────────────────────────────────────────────────────────────
   {
     id: '11', category: 'gift',
-    name: 'Box Prestige — 24 pièces',
-    desc: 'Our signature gift box: 6 Makroud + 6 Ghribia + 6 Baklava + 6 Cornes de Gazelle. Beautifully wrapped.',
+    name: 'Box Prestige — 24 Pièces Assorties',
+    desc: 'Signature gift box: 6 Makroud + 6 Ghribia + 6 Baklava + 6 Cornes de Gazelle. Tied with gold ribbon, personalized card. Free gift wrapping.',
     price: 85, orig: 110, badge: 'Best Seller',
     img: 'https://images.unsplash.com/photo-1607920592519-7b2d615d8c3e?w=600&q=80',
-    angle: 'The perfect Eid, wedding & celebration gift — "she cried when she opened it"'
+    angle: '"She cried when she opened it" — perfect Eid & wedding gift'
   },
   {
     id: '12', category: 'gift',
-    name: 'Box Eid Premium — 36 pièces',
-    desc: 'Our largest celebration box with 6 varieties of pastries in a luxury gold-ribbon presentation box.',
-    price: 125, orig: 160, badge: 'New',
+    name: 'Box Eid Premium — 36 Pièces Luxe',
+    desc: 'Our grandest celebration box: 6 varieties of premium pastries in a luxury gold presentation case. Personalized ribbon & card included.',
+    price: 125, orig: 160, badge: 'Best Seller',
     img: 'https://images.unsplash.com/photo-1549465220-1a8b9238cd48?w=600&q=80',
-    angle: 'Luxury Eid gifting — custom ribbon, personalized card included'
+    angle: 'Luxury Eid gifting — "the most beautiful gift I\'ve ever received"'
+  },
+  {
+    id: '13', category: 'gift',
+    name: 'Box Ramadan Maison — 48 Pièces',
+    desc: 'The ultimate Ramadan family box: Makroud + Zlabia + Baklava + Griwech + Ghribia + Chrik. 48 pieces for the whole family. Gold tray included.',
+    price: 150, orig: 195, badge: 'Hot 🔥',
+    img: 'https://images.unsplash.com/photo-1511381939415-e44015466834?w=600&q=80',
+    angle: 'Ramadan family box — "worth every cent, feeds the whole family"'
+  },
+  {
+    id: '14', category: 'gift',
+    name: 'Mini Découverte — 12 Pièces Variées',
+    desc: 'Perfect introduction to Algerian pastries: 12 pieces, 4 varieties. Great for first-timers and small celebrations. Gift-wrapped.',
+    price: 38, orig: null, badge: 'New',
+    img: 'https://images.unsplash.com/photo-1488477181946-6428a0291777?w=600&q=80',
+    angle: 'Best entry-level gift — "I was instantly hooked on Algerian pastries"'
   }
 ];
 
