@@ -299,18 +299,36 @@ async function demoPayPal() {
 
 // ── INTERAC ─────────────────────────────────────────────────
 async function processInterac() {
-  if (DEMO_MODE) {
-    await new Promise(r => setTimeout(r, 1800));
-    showSuccess();
-    return;
+  const ref = 'CS-' + Math.random().toString(36).substring(2, 8).toUpperCase();
+  const subtotal = cart.reduce((s, i) => s + i.price * i.qty, 0);
+  const shipping = subtotal >= FREE_SHIP_AT ? 0 : SHIP_COST;
+  const tax      = subtotal * TAX_RATE;
+  const grand    = (subtotal + shipping + tax).toFixed(2);
+
+  await saveOrder('Interac', ref);
+
+  // Show reference number immediately so client can include it in Interac message
+  const box = document.getElementById('pm-interac')?.querySelector('div');
+  if (box) {
+    box.innerHTML = `
+      <p style="font-weight:700;color:#3d1f08;font-size:1rem;margin-bottom:10px;">✅ Commande Confirmée!</p>
+      <p style="font-size:.9rem;color:#5c3d1e;line-height:1.8;margin-bottom:12px;">
+        Veuillez envoyer <strong>${CURRENCY_SYM}${grand}</strong> par Interac e-Transfer à :<br/>
+        <strong style="font-size:1rem;color:#3d1f08;">djimouu91@gmail.com</strong>
+      </p>
+      <div style="background:#fff;border:2px dashed #c8922a;border-radius:8px;padding:12px;margin:10px 0;">
+        <p style="font-size:.78rem;color:#9a7a58;margin-bottom:4px;">NUMÉRO DE COMMANDE</p>
+        <p style="font-size:1.3rem;font-weight:700;color:#3d1f08;letter-spacing:2px;">${ref}</p>
+        <p style="font-size:.78rem;color:#9a7a58;">Inclure dans le message Interac</p>
+      </div>
+      <p style="font-size:.8rem;color:#9a7a58;">Un email de confirmation sera envoyé dès réception du paiement.</p>`;
   }
-  showToast('Interac order confirmed. Please send e-Transfer to hello@capitalsweets.ca');
-  await saveOrder('Interac');
-  setTimeout(showSuccess, 2000);
 }
 
 // ── SAVE ORDER ──────────────────────────────────────────────
-async function saveOrder(method) {
+async function saveOrder(method, ref) {
+  const sd = window.shippingData || {};
+  const orderRef = ref || 'CS-' + Math.random().toString(36).substring(2, 8).toUpperCase();
   try {
     const subtotal = cart.reduce((s, i) => s + i.price * i.qty, 0);
     const shipping = subtotal >= FREE_SHIP_AT ? 0 : SHIP_COST;
@@ -319,16 +337,19 @@ async function saveOrder(method) {
       method:  'POST',
       headers: { 'Content-Type': 'application/json' },
       body:    JSON.stringify({
+        ref: orderRef,
         customerData: {
-          firstName: document.getElementById('fn')?.value,
-          lastName:  document.getElementById('ln')?.value,
-          email:     document.getElementById('em')?.value,
-          phone:     document.getElementById('ph')?.value,
-          address:   document.getElementById('addr')?.value,
-          city:      document.getElementById('city')?.value,
-          zip:       document.getElementById('zip')?.value,
-          province:  document.getElementById('country')?.value || 'ON',
-          giftMessage: document.getElementById('giftMsg')?.value
+          firstName:   sd.firstName || document.getElementById('fn')?.value,
+          lastName:    sd.lastName  || document.getElementById('ln')?.value,
+          email:       sd.email     || document.getElementById('em')?.value,
+          phone:       sd.phone     || document.getElementById('ph')?.value,
+          address:     sd.address   || document.getElementById('addr')?.value,
+          apt:         sd.apt       || '',
+          city:        sd.city      || document.getElementById('city')?.value,
+          postal:      sd.postal    || document.getElementById('zip')?.value,
+          province:    sd.province  || document.getElementById('province')?.value,
+          country:     sd.country   || document.getElementById('country')?.value || 'CA',
+          giftMessage: sd.giftMsg   || document.getElementById('giftMsg')?.value
         },
         items: cart,
         paymentMethod: method,

@@ -2,14 +2,70 @@
 // CapitalSweets — Checkout · Stripe Canada + PayPal
 // ═══════════════════════════════════════════════════════════
 
-const STRIPE_KEY   = 'pk_test_YOUR_STRIPE_KEY';
+const STRIPE_KEY   = 'pk_live_51TZEduE1hYEQBg1wkvGbRrUWh1UJUX9SzxOxLoAbjZNTohdqvQ8FuHY2GacfLYSKt9mr4ehzjGa70LJimue6VEzD00VadggbjJ';
 const BACKEND_URL  = window.location.port === '3000' ? '' : 'http://localhost:3000';
 const DEMO_MODE    = STRIPE_KEY.includes('YOUR');
 const CURRENCY     = 'CAD';
 const CURRENCY_SYM = 'CA$';
-const TAX_RATE     = 0.13; // Ontario HST — adjust per province
+const TAX_RATE     = 0.13;
 const FREE_SHIP_AT = 65;
 const SHIP_COST    = 9.99;
+
+// ── PROVINCE / STATE DROPDOWN ──────────────────────────────
+const REGIONS = {
+  CA: [
+    ['AB','Alberta'],['BC','British Columbia'],['MB','Manitoba'],
+    ['NB','New Brunswick'],['NL','Newfoundland'],['NS','Nova Scotia'],
+    ['NT','Northwest Territories'],['NU','Nunavut'],['ON','Ontario'],
+    ['PE','Prince Edward Island'],['QC','Québec'],['SK','Saskatchewan'],['YT','Yukon']
+  ],
+  US: [
+    ['AL','Alabama'],['AK','Alaska'],['AZ','Arizona'],['AR','Arkansas'],
+    ['CA','California'],['CO','Colorado'],['CT','Connecticut'],['DE','Delaware'],
+    ['FL','Florida'],['GA','Georgia'],['HI','Hawaii'],['ID','Idaho'],
+    ['IL','Illinois'],['IN','Indiana'],['IA','Iowa'],['KS','Kansas'],
+    ['KY','Kentucky'],['LA','Louisiana'],['ME','Maine'],['MD','Maryland'],
+    ['MA','Massachusetts'],['MI','Michigan'],['MN','Minnesota'],['MS','Mississippi'],
+    ['MO','Missouri'],['MT','Montana'],['NE','Nebraska'],['NV','Nevada'],
+    ['NH','New Hampshire'],['NJ','New Jersey'],['NM','New Mexico'],['NY','New York'],
+    ['NC','North Carolina'],['ND','North Dakota'],['OH','Ohio'],['OK','Oklahoma'],
+    ['OR','Oregon'],['PA','Pennsylvania'],['RI','Rhode Island'],['SC','South Carolina'],
+    ['SD','South Dakota'],['TN','Tennessee'],['TX','Texas'],['UT','Utah'],
+    ['VT','Vermont'],['VA','Virginia'],['WA','Washington'],['WV','West Virginia'],
+    ['WI','Wisconsin'],['WY','Wyoming'],['DC','Washington D.C.']
+  ]
+};
+
+function updateProvinceDropdown(country) {
+  const sel   = document.getElementById('province');
+  const label = document.getElementById('provinceLabel');
+  const zip   = document.getElementById('zip');
+  const zipLb = document.getElementById('zipLabel');
+  if (!sel) return;
+  if (country === 'CA') {
+    label && (label.textContent = 'Province');
+    zipLb  && (zipLb.textContent = 'Postal Code');
+    zip    && (zip.placeholder = 'K1A 0A9', zip.maxLength = 7);
+    sel.innerHTML = '<option value="">Select province...</option>' +
+      REGIONS.CA.map(([v,l]) => `<option value="${v}">${l}</option>`).join('');
+    sel.required = true;
+  } else if (country === 'US') {
+    label && (label.textContent = 'State');
+    zipLb  && (zipLb.textContent = 'ZIP Code');
+    zip    && (zip.placeholder = '10001', zip.maxLength = 10);
+    sel.innerHTML = '<option value="">Select state...</option>' +
+      REGIONS.US.map(([v,l]) => `<option value="${v}">${l}</option>`).join('');
+    sel.required = true;
+  } else {
+    label && (label.textContent = 'Region');
+    zipLb  && (zipLb.textContent = 'Postal / ZIP');
+    zip    && (zip.placeholder = '', zip.maxLength = 15);
+    sel.innerHTML = '<option value="">N/A</option>';
+    sel.required = false;
+  }
+}
+
+document.addEventListener('DOMContentLoaded', () => updateProvinceDropdown('CA'));
 
 let stripeInstance = null;
 let cardElement    = null;
@@ -39,6 +95,28 @@ function showStep(n) {
 
 function goStep2(e) {
   e.preventDefault();
+  window.shippingData = {
+    firstName : document.getElementById('fn')?.value || '',
+    lastName  : document.getElementById('ln')?.value || '',
+    email     : document.getElementById('em')?.value || '',
+    phone     : document.getElementById('ph')?.value || '',
+    address   : document.getElementById('addr')?.value || '',
+    apt       : document.getElementById('apt')?.value || '',
+    city      : document.getElementById('city')?.value || '',
+    postal    : document.getElementById('zip')?.value || '',
+    province  : document.getElementById('province')?.value || '',
+    country   : document.getElementById('country')?.value || 'CA',
+    giftMsg   : document.getElementById('giftMsg')?.value || '',
+  };
+  const shipEl = document.getElementById('shippingPreview');
+  if (shipEl) {
+    const d = window.shippingData;
+    const aptStr = d.apt ? `, ${d.apt}` : '';
+    shipEl.innerHTML = `<strong>${d.firstName} ${d.lastName}</strong><br>
+      ${d.address}${aptStr}, ${d.city}<br>
+      ${d.province} ${d.postal}, ${d.country}<br>
+      📧 ${d.email} &nbsp; 📞 ${d.phone}`;
+  }
   populateSummary();
   showStep(2);
   initPayPalButton();
@@ -221,18 +299,36 @@ async function demoPayPal() {
 
 // ── INTERAC ─────────────────────────────────────────────────
 async function processInterac() {
-  if (DEMO_MODE) {
-    await new Promise(r => setTimeout(r, 1800));
-    showSuccess();
-    return;
+  const ref = 'CS-' + Math.random().toString(36).substring(2, 8).toUpperCase();
+  const subtotal = cart.reduce((s, i) => s + i.price * i.qty, 0);
+  const shipping = subtotal >= FREE_SHIP_AT ? 0 : SHIP_COST;
+  const tax      = subtotal * TAX_RATE;
+  const grand    = (subtotal + shipping + tax).toFixed(2);
+
+  await saveOrder('Interac', ref);
+
+  // Show reference number immediately so client can include it in Interac message
+  const box = document.getElementById('pm-interac')?.querySelector('div');
+  if (box) {
+    box.innerHTML = `
+      <p style="font-weight:700;color:#3d1f08;font-size:1rem;margin-bottom:10px;">✅ Commande Confirmée!</p>
+      <p style="font-size:.9rem;color:#5c3d1e;line-height:1.8;margin-bottom:12px;">
+        Veuillez envoyer <strong>${CURRENCY_SYM}${grand}</strong> par Interac e-Transfer à :<br/>
+        <strong style="font-size:1rem;color:#3d1f08;">djimouu91@gmail.com</strong>
+      </p>
+      <div style="background:#fff;border:2px dashed #c8922a;border-radius:8px;padding:12px;margin:10px 0;">
+        <p style="font-size:.78rem;color:#9a7a58;margin-bottom:4px;">NUMÉRO DE COMMANDE</p>
+        <p style="font-size:1.3rem;font-weight:700;color:#3d1f08;letter-spacing:2px;">${ref}</p>
+        <p style="font-size:.78rem;color:#9a7a58;">Inclure dans le message Interac</p>
+      </div>
+      <p style="font-size:.8rem;color:#9a7a58;">Un email de confirmation sera envoyé dès réception du paiement.</p>`;
   }
-  showToast('Interac order confirmed. Please send e-Transfer to hello@capitalsweets.ca');
-  await saveOrder('Interac');
-  setTimeout(showSuccess, 2000);
 }
 
 // ── SAVE ORDER ──────────────────────────────────────────────
-async function saveOrder(method) {
+async function saveOrder(method, ref) {
+  const sd = window.shippingData || {};
+  const orderRef = ref || 'CS-' + Math.random().toString(36).substring(2, 8).toUpperCase();
   try {
     const subtotal = cart.reduce((s, i) => s + i.price * i.qty, 0);
     const shipping = subtotal >= FREE_SHIP_AT ? 0 : SHIP_COST;
@@ -241,16 +337,19 @@ async function saveOrder(method) {
       method:  'POST',
       headers: { 'Content-Type': 'application/json' },
       body:    JSON.stringify({
+        ref: orderRef,
         customerData: {
-          firstName: document.getElementById('fn')?.value,
-          lastName:  document.getElementById('ln')?.value,
-          email:     document.getElementById('em')?.value,
-          phone:     document.getElementById('ph')?.value,
-          address:   document.getElementById('addr')?.value,
-          city:      document.getElementById('city')?.value,
-          zip:       document.getElementById('zip')?.value,
-          province:  document.getElementById('country')?.value || 'ON',
-          giftMessage: document.getElementById('giftMsg')?.value
+          firstName:   sd.firstName || document.getElementById('fn')?.value,
+          lastName:    sd.lastName  || document.getElementById('ln')?.value,
+          email:       sd.email     || document.getElementById('em')?.value,
+          phone:       sd.phone     || document.getElementById('ph')?.value,
+          address:     sd.address   || document.getElementById('addr')?.value,
+          apt:         sd.apt       || '',
+          city:        sd.city      || document.getElementById('city')?.value,
+          postal:      sd.postal    || document.getElementById('zip')?.value,
+          province:    sd.province  || document.getElementById('province')?.value,
+          country:     sd.country   || document.getElementById('country')?.value || 'CA',
+          giftMessage: sd.giftMsg   || document.getElementById('giftMsg')?.value
         },
         items: cart,
         paymentMethod: method,
