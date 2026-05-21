@@ -379,23 +379,29 @@
           </div>
           <div class="co-field"><label>Email</label><input id="em" type="email" required placeholder="amina@email.com"/></div>
           <div class="co-field"><label>Phone</label><input id="ph" type="tel" placeholder="+1 613 000 0000"/></div>
-          <div class="co-field"><label>Address</label><input id="addr" type="text" required placeholder="123 Main St"/></div>
+          <div class="co-field"><label>Street Address</label><input id="addr" type="text" required placeholder="123 Main St"/></div>
+          <div class="co-field"><label>Apt / Suite / Unit <span style="font-weight:400;color:#aaa">(optional)</span></label><input id="apt" type="text" placeholder="Apt 4B"/></div>
           <div class="co-row2">
             <div class="co-field"><label>City</label><input id="city" type="text" required placeholder="Ottawa"/></div>
-            <div class="co-field"><label>Postal Code</label><input id="zip" type="text" required placeholder="K1A 0A1"/></div>
+            <div class="co-field"><label id="zipLabel">Postal Code</label><input id="zip" type="text" required placeholder="K1A 0A1" maxlength="10" oninput="this.value=this.value.toUpperCase()"/></div>
           </div>
-          <div class="co-field">
-            <label>Province</label>
-            <select id="country">
-              <option value="ON">Ontario</option>
-              <option value="QC">Quebec</option>
-              <option value="BC">British Columbia</option>
-              <option value="AB">Alberta</option>
-              <option value="MB">Manitoba</option>
-              <option value="SK">Saskatchewan</option>
-              <option value="NS">Nova Scotia</option>
-              <option value="NB">New Brunswick</option>
-            </select>
+          <div class="co-row2">
+            <div class="co-field">
+              <label id="provinceLabel">Province</label>
+              <select id="province" required></select>
+            </div>
+            <div class="co-field">
+              <label>Country</label>
+              <select id="country" onchange="updateProvinceDropdown(this.value)">
+                <option value="CA">Canada 🇨🇦</option>
+                <option value="US">United States 🇺🇸</option>
+                <option value="DZ">Algeria</option>
+                <option value="MA">Morocco</option>
+                <option value="TN">Tunisia</option>
+                <option value="FR">France</option>
+                <option value="AE">UAE</option>
+              </select>
+            </div>
           </div>
           <div class="co-field">
             <label>Gift Message (optional)</label>
@@ -419,6 +425,7 @@
         <button class="co-back-btn" onclick="showStep(1)">← Back</button>
       </div>
       <div class="co-right">
+        <div id="shippingPreview" style="background:#fdf7ed;border:1px solid #e8d9b8;border-radius:8px;padding:10px 14px;font-size:.82rem;color:#3d1f08;margin-bottom:14px;line-height:1.6;"></div>
         <h3 class="co-title">Payment</h3>
 
         <!-- Payment method tabs -->

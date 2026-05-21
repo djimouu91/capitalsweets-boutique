@@ -2,14 +2,70 @@
 // CapitalSweets — Checkout · Stripe Canada + PayPal
 // ═══════════════════════════════════════════════════════════
 
-const STRIPE_KEY   = 'pk_test_YOUR_STRIPE_KEY';
+const STRIPE_KEY   = 'pk_live_51TZEduE1hYEQBg1wkvGbRrUWh1UJUX9SzxOxLoAbjZNTohdqvQ8FuHY2GacfLYSKt9mr4ehzjGa70LJimue6VEzD00VadggbjJ';
 const BACKEND_URL  = window.location.port === '3000' ? '' : 'http://localhost:3000';
 const DEMO_MODE    = STRIPE_KEY.includes('YOUR');
 const CURRENCY     = 'CAD';
 const CURRENCY_SYM = 'CA$';
-const TAX_RATE     = 0.13; // Ontario HST — adjust per province
+const TAX_RATE     = 0.13;
 const FREE_SHIP_AT = 65;
 const SHIP_COST    = 9.99;
+
+// ── PROVINCE / STATE DROPDOWN ──────────────────────────────
+const REGIONS = {
+  CA: [
+    ['AB','Alberta'],['BC','British Columbia'],['MB','Manitoba'],
+    ['NB','New Brunswick'],['NL','Newfoundland'],['NS','Nova Scotia'],
+    ['NT','Northwest Territories'],['NU','Nunavut'],['ON','Ontario'],
+    ['PE','Prince Edward Island'],['QC','Québec'],['SK','Saskatchewan'],['YT','Yukon']
+  ],
+  US: [
+    ['AL','Alabama'],['AK','Alaska'],['AZ','Arizona'],['AR','Arkansas'],
+    ['CA','California'],['CO','Colorado'],['CT','Connecticut'],['DE','Delaware'],
+    ['FL','Florida'],['GA','Georgia'],['HI','Hawaii'],['ID','Idaho'],
+    ['IL','Illinois'],['IN','Indiana'],['IA','Iowa'],['KS','Kansas'],
+    ['KY','Kentucky'],['LA','Louisiana'],['ME','Maine'],['MD','Maryland'],
+    ['MA','Massachusetts'],['MI','Michigan'],['MN','Minnesota'],['MS','Mississippi'],
+    ['MO','Missouri'],['MT','Montana'],['NE','Nebraska'],['NV','Nevada'],
+    ['NH','New Hampshire'],['NJ','New Jersey'],['NM','New Mexico'],['NY','New York'],
+    ['NC','North Carolina'],['ND','North Dakota'],['OH','Ohio'],['OK','Oklahoma'],
+    ['OR','Oregon'],['PA','Pennsylvania'],['RI','Rhode Island'],['SC','South Carolina'],
+    ['SD','South Dakota'],['TN','Tennessee'],['TX','Texas'],['UT','Utah'],
+    ['VT','Vermont'],['VA','Virginia'],['WA','Washington'],['WV','West Virginia'],
+    ['WI','Wisconsin'],['WY','Wyoming'],['DC','Washington D.C.']
+  ]
+};
+
+function updateProvinceDropdown(country) {
+  const sel   = document.getElementById('province');
+  const label = document.getElementById('provinceLabel');
+  const zip   = document.getElementById('zip');
+  const zipLb = document.getElementById('zipLabel');
+  if (!sel) return;
+  if (country === 'CA') {
+    label && (label.textContent = 'Province');
+    zipLb  && (zipLb.textContent = 'Postal Code');
+    zip    && (zip.placeholder = 'K1A 0A9', zip.maxLength = 7);
+    sel.innerHTML = '<option value="">Select province...</option>' +
+      REGIONS.CA.map(([v,l]) => `<option value="${v}">${l}</option>`).join('');
+    sel.required = true;
+  } else if (country === 'US') {
+    label && (label.textContent = 'State');
+    zipLb  && (zipLb.textContent = 'ZIP Code');
+    zip    && (zip.placeholder = '10001', zip.maxLength = 10);
+    sel.innerHTML = '<option value="">Select state...</option>' +
+      REGIONS.US.map(([v,l]) => `<option value="${v}">${l}</option>`).join('');
+    sel.required = true;
+  } else {
+    label && (label.textContent = 'Region');
+    zipLb  && (zipLb.textContent = 'Postal / ZIP');
+    zip    && (zip.placeholder = '', zip.maxLength = 15);
+    sel.innerHTML = '<option value="">N/A</option>';
+    sel.required = false;
+  }
+}
+
+document.addEventListener('DOMContentLoaded', () => updateProvinceDropdown('CA'));
 
 let stripeInstance = null;
 let cardElement    = null;
@@ -39,6 +95,28 @@ function showStep(n) {
 
 function goStep2(e) {
   e.preventDefault();
+  window.shippingData = {
+    firstName : document.getElementById('fn')?.value || '',
+    lastName  : document.getElementById('ln')?.value || '',
+    email     : document.getElementById('em')?.value || '',
+    phone     : document.getElementById('ph')?.value || '',
+    address   : document.getElementById('addr')?.value || '',
+    apt       : document.getElementById('apt')?.value || '',
+    city      : document.getElementById('city')?.value || '',
+    postal    : document.getElementById('zip')?.value || '',
+    province  : document.getElementById('province')?.value || '',
+    country   : document.getElementById('country')?.value || 'CA',
+    giftMsg   : document.getElementById('giftMsg')?.value || '',
+  };
+  const shipEl = document.getElementById('shippingPreview');
+  if (shipEl) {
+    const d = window.shippingData;
+    const aptStr = d.apt ? `, ${d.apt}` : '';
+    shipEl.innerHTML = `<strong>${d.firstName} ${d.lastName}</strong><br>
+      ${d.address}${aptStr}, ${d.city}<br>
+      ${d.province} ${d.postal}, ${d.country}<br>
+      📧 ${d.email} &nbsp; 📞 ${d.phone}`;
+  }
   populateSummary();
   showStep(2);
   initPayPalButton();
