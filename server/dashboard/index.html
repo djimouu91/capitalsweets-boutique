@@ -431,9 +431,9 @@ function openOrder(ref) {
       <div class="od-block">
         <div class="od-label">Shipping Address</div>
         <div class="od-val">
-          ${o.customerData?.address || ''}<br/>
-          ${o.customerData?.city || ''} ${o.customerData?.zip || ''}<br/>
-          ${o.customerData?.province || 'ON'}, Canada
+          ${o.customerData?.address || ''}${o.customerData?.apt ? ', Apt '+o.customerData.apt : ''}<br/>
+          ${o.customerData?.city || ''}, ${o.customerData?.province || 'ON'} ${o.customerData?.postal || o.customerData?.zip || ''}<br/>
+          ${o.customerData?.country || 'Canada'}
         </div>
       </div>
       ${o.customerData?.giftMessage ? `
